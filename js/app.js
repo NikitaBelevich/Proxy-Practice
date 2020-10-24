@@ -20,3 +20,17 @@ function wrap(target) {
     });
 }
 
+// Task 2
+let array2 = [1,2,3,4,5,6,7,8];
+let arr2Proxy = new Proxy(array2, {
+    get(target, elem) {
+        const index = elem;
+        if (index < 0) {
+            return target[target.length - Number(-index)];
+        } else {
+            return target[elem];
+        }
+    }
+});
+
+
