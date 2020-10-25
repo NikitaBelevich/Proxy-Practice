@@ -33,4 +33,35 @@ let arr2Proxy = new Proxy(array2, {
     }
 });
 
+// Task 3
 
+let user2 = {
+    name: "Jane",
+    age: 35,
+};
+
+// Проксируем объект
+let user2Proxy = makeObservable(user2);
+// Задали _handler функцию
+user2Proxy.observe((key, value) => {
+    console.warn(`SET ${key}=${value}`);
+});
+
+function makeObservable(target) {
+    // Создали для target метод observer, который добавляет переданную 
+    // функцию в свойство _handler
+    target.observe = (handler = () => { // фукнцию по умолчанию
+        console.log(`Hi, my name is ${target.name}`);
+    }) => {
+        target.__proto__._handler = handler;
+    }
+    
+    return new Proxy(target, {
+        set(target, prop, value) {
+            target[prop] = value;
+            // Теперь при каждой записи или перезаписи будет срабатывать _handler который мы задали ранее
+            target._handler(prop, value);
+            return true;
+        }
+    });
+}
